@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="check.css" />
+  <script src="check.js"></script>
+  <meta charset="utf8">
+</head>
+
+<body>
+  <h4>Copy content from text.txt file to this box</h4>
+  <div class="container">
+    <div class="box">
+      <div id="input-box" contenteditable="true" data-text="Input text here">
+      </div>
+    </div>
+    <button type="button" id="check">Check</button>
+    <h4>
+      Click this button to test fetch from server and open
+      Console to see result. But before Click it, you must open server.
+      Type "node server.js" in folder of project. And ....
+      Enjoy it :)))
+    </h4>
+    <button type="button" id="fetch">Fetch</button>
+    <div tabindex="0" id="panel" class="hidden">
+      <ul></ul>
+    </div>
+  </div>
+</body>
+</html>
