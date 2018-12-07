@@ -1,32 +1,45 @@
+const url = 'http://e3b9e22d.ngrok.io/spell';
 const panelShow = false;
-const errors = [
-  {
-    'Lorem Ipsum': ['Hello', 'Hi', 'Nihao', 'Bye bye', 'Love u']
-  }
-]
+let errors = [];
+let warning = [];
 
 window.onload = function () {
   const btnCheck = document.querySelector('#check');
   const btnFetch = document.querySelector('#fetch');
   btnCheck.onclick = onChecking;
-  btnFetch.onclick = () => fetch('http://localhost:3000/api/')
-    .then(function (response) {
-      return response.json();
-    })
-    .then(function (myJson) {
-      console.log(JSON.stringify(myJson));
-    });
 }
 
 function onChecking() {
   const inputBox = document.querySelector('#input-box');
   let content = inputBox.textContent;
-  errors.forEach((item, index) => {
-    const error = Object.keys(item)[0];
-    content = replaceAll(content, error, errorTagSpan(error, index));
-    inputBox.innerHTML = content;
-    setErrorListener();
+
+  const data = { data: content };
+  fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+    },
+    body: JSON.stringify(data)
   })
+    .then(res => res.json())
+    .then(res => {
+      errors = res.errors;
+      warning = res.warning;
+      console.log(res);
+      warning.forEach((w, index) => {
+        content = replaceAll(content, w, warningTagSpan(w));
+        console.log(warning);
+        console.log(content);
+        inputBox.innerHTML = content;
+      });
+      errors.forEach((item, index) => {
+        const error = Object.keys(item)[0];
+        content = replaceAll(content, error, errorTagSpan(error, index));
+        inputBox.innerHTML = content;
+        setErrorListener();
+      });
+    })
+    .catch(err => console.log(err));
 }
 
 function replaceAll(str, find, replace) {
@@ -35,6 +48,10 @@ function replaceAll(str, find, replace) {
 
 function errorTagSpan(text, id) {
   return `<span class="error" data-errorId=${id}>${text}</span>`;
+}
+
+function warningTagSpan(text) {
+  return `<span class="warning">${text}</span>`;
 }
 
 function setErrorListener() {
